@@ -1,0 +1,63 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../object-to-json/object-to-json.html">
+<link rel="import" href="../monaco-editor/monaco-editor.html">
+
+<dom-module id="api-description">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #mainCard {
+        width: 100%;
+      }
+
+      #mainEditor {
+        width: 100%;
+      }
+    </style>
+    <paper-card heading="{{name}}" id="mainCard">
+      <div class="card-content">
+        <p>{{description}}</p>
+      </div>
+      <div class="card-content">
+        <paper-input label="api-url" value="{{apiUrl}}"></paper-input>
+      </div>
+      <div class="card-content">
+        <iron-ajax auto with-credentials url="{{apiUrl}}" handle-as="json" last-response="{{apiData}}"></iron-ajax>
+        <object-to-json object="{{apiData}}" json="{{apiDataAsJson}}"></object-to-json>
+        <monaco-editor id="mainEditor" value="[[apiDataAsJson]]" language="json"></monaco-editor>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    class ApiDescription extends Polymer.Element {
+      static get is() { return 'api-description'; }
+      static get properties() {
+        return {
+          apiUrl: {
+            type: String
+          },
+          apiData: {
+            type: Object
+          },
+          apiDataAsJson: {
+            type: String
+          },
+          name: {
+            type: String
+          },
+          description: {
+            type: String
+          }
+        };
+      }
+    }
+
+    window.customElements.define(ApiDescription.is, ApiDescription);
+  </script>
+</dom-module>
